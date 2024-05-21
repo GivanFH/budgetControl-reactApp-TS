@@ -1,12 +1,18 @@
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import BudgetForm from "./componentes/BudgetForm";
 import { useBudget } from "./hooks/useBudget";
 import BudgetTracker from "./componentes/BudgetTracker";
 import ExpenseModal from "./componentes/ExpenseModal";
+import ExpenseList from "./componentes/ExpenseList";
+
 function App() {
   const { state } = useBudget();
-
   const isValidBudget = useMemo(() => state.budget > 0, [state.budget]);
+
+  useEffect(() => {
+    localStorage.setItem("budget", state.budget.toString());
+    localStorage.setItem("expenses", JSON.stringify(state.expenses));
+  }, [state]);
 
   return (
     <>
@@ -22,6 +28,7 @@ function App() {
 
       {isValidBudget && (
         <main className="max-w-3xl mx-auto py-10">
+          <ExpenseList />
           <ExpenseModal />
         </main>
       )}
